@@ -97,7 +97,7 @@ def add_birthday(book, *args):
 @input_error_handler
 def show_birthday(book, *args):
     if len(args) < 1:
-        raise ValueError("Insufficient arguments for 'show-birthday' command. Please provide the name.")
+        raise ValueError("Insufficient arguments 'show-birthday' command. Please provide the name.")
 
     name = args[0]
     record = book.find(name)
