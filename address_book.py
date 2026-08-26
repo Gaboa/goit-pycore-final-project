@@ -20,29 +20,24 @@ class AddressBook:
                 result.append(f"{record.name}: {record.get_birthday()}")
         return result
 
-    def get_upcoming_birthdays(self) -> list[Record]:
+    def get_upcoming_birthdays(self, delta) -> list[Record]:
         result = []
         today = dt.today()
 
         for user in self.data.values():
             birthday = dt.strptime(user.get_birthday(), "%Y-%m-%d")
-            delta_days = birthday.replace(year=today.year, hour=23, minute=59, second=59) - today
+            nearest_birthday = birthday.replace(year=today.year)
+            if nearest_birthday < today:
+                nearest_birthday = nearest_birthday.replace(year=today.year + 1)
+
+            delta_days = nearest_birthday - today
     
-            if delta_days.days >= 0 and delta_days.days < 7:
-                congratulation_date = birthday.replace(year=today.year)
-                congratulation_weekday = congratulation_date.date().isoweekday()
-                addditional_days = 0
-
-                if congratulation_weekday == 6:  # Saturday
-                    addditional_days = 2
-                elif congratulation_weekday == 7:  # Sunday
-                    addditional_days = 1
-
-                congratulation_date = congratulation_date.replace(day=congratulation_date.day + addditional_days)
+            if delta_days.days < delta:
+                congratulation_date = nearest_birthday.strftime("%Y-%m-%d")
 
                 result.append({
                     "name": user.name,
-                    "congratulation_date": congratulation_date.strftime("%Y.%m.%d"),
+                    "congratulation_date": congratulation_date,
                 })
 
         return result
