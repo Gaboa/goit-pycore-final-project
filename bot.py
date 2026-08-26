@@ -3,7 +3,7 @@ from record import Record
 from decorators import input_error_handler
 import pickle
 
-valid_commands = ["hello", "close", "exit", "add", "change", "all", "phone", "add-birthday", "show-birthday", "birthdays"]
+valid_commands = ["hello", "close", "exit", "add", "change", "search", "all", "phone", "add-birthday", "show-birthday", "birthdays"]
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -57,6 +57,22 @@ def change_contact(book, *args):
     record.edit_phone(old_phone, new_phone)
 
     print(f"Changing a contact phone: {name} {old_phone} -> {new_phone}")
+
+@input_error_handler
+def search_contact(book, *args):
+    if len(args) < 1:
+        raise ValueError("Insufficient arguments for 'search' command. Please provide a search query.")
+
+    query = args[0]
+    results = book.search(query)
+
+    if not results:
+        print(f"No contacts found matching '{query}'.")
+        return
+
+    print(f"Contacts matching '{query}':")
+    for record in results:
+        print(record)
 
 @input_error_handler
 def show_phone(book, *args):
@@ -138,6 +154,8 @@ def main():
                 add_contact(book, *args)
             elif command == "change":
                 change_contact(book, *args)
+            elif command == "search":
+                search_contact(book, *args)
             elif command == "phone":
                 show_phone(book, *args)
             elif command == "all":

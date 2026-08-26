@@ -13,6 +13,13 @@ class AddressBook:
     def find(self, name):
         return self.data.get(name)
 
+    def search(self, query):
+        result = []
+        for record in self.data.values():
+            if query.lower() in record.name.lower():
+                result.append(record)
+        return result
+
     def birthdays(self):
         result = []
         for record in self.data.values():
