@@ -80,6 +80,7 @@ def show_all_contacts(book):
     print("Showing all contacts:")
     for record in book.data.values():
         print(record)
+        print()
 
 @input_error_handler
 def add_birthday(book, *args):
@@ -142,7 +143,10 @@ def add_email(book, *args):
 @input_error_handler
 def edit_email(book, *args):
     if len(args) < 2:
-        raise ValueError("Insufficient arguments for this command. Please provide both name and new email.")
+        raise ValueError(
+            "Insufficient arguments for this command. "
+            "Please provide both name and new email."
+        )
 
     name, new_email, *_ = args
     record = book.find(name)
@@ -150,9 +154,10 @@ def edit_email(book, *args):
     if record is None:
         raise ValueError(f"Contact with name '{name}' does not exist.")
 
+    old_email = record.get_email()
     record.edit_email(new_email)
 
-    print(f"Editing email: {name} {new_email}")
+    print(f"Editing email: {name}: {old_email} -> {new_email}")
 
 @input_error_handler
 def get_email(book, *args):
@@ -200,7 +205,10 @@ def add_address(book, *args):
 @input_error_handler
 def edit_address(book, *args):
     if len(args) < 2:
-        raise ValueError("Insufficient arguments for this command. Please provide both name and new address.")
+        raise ValueError(
+            "Insufficient arguments for this command. "
+            "Please provide both name and new address."
+        )
 
     name, *_ = args
     new_address = " ".join(args[1:])
@@ -209,8 +217,9 @@ def edit_address(book, *args):
     if record is None:
         raise ValueError(f"Contact with name '{name}' does not exist.")
 
+    old_address = record.get_address()
     record.edit_address(new_address)
-    print(f"Editing address: {name} {new_address}")
+    print(f"Editing address: {name}: {old_address} -> {new_address}")
 
 @input_error_handler
 def get_address(book, *args):

@@ -62,10 +62,10 @@ class Record:
         self.address = None
     def __str__(self):
         return (
-            f"Contact name: {self.name}," 
-            f" Phones: {'; '.join(p.number for p in self.phones)}, " 
-            f"Birthday: {self.birthday.date if self.birthday else 'N/A'}, " 
-            f"Email: {self.email.email if self.email else 'N/A'}, " 
+            f"Contact name: {self.name}\n" 
+            f"Phones: {'; '.join(p.number for p in self.phones)}\n" 
+            f"Birthday: {self.birthday.date if self.birthday else 'N/A'}\n" 
+            f"Email: {self.email.email if self.email else 'N/A'}\n" 
             f"Address: {self.address.address if self.address else 'N/A'}"
             )
 
