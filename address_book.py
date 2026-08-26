@@ -26,7 +26,7 @@ class AddressBook:
 
         for user in self.data.values():
             birthday = dt.strptime(user.get_birthday(), "%Y-%m-%d")
-            nearest_birthday = birthday.replace(year=today.year)
+            nearest_birthday = birthday.replace(year=today.year, hour=23, minute=59, second=59)
             if nearest_birthday < today:
                 nearest_birthday = nearest_birthday.replace(year=today.year + 1)
 
