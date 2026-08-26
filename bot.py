@@ -1,9 +1,10 @@
 from address_book import AddressBook
 from record import Record
 from decorators import input_error_handler
+from helpers import checkForArguments, checkIfRecordExists
 import pickle
 
-valid_commands = ["hello", "close", "exit", "add", "change", "search", "all", "phone", "add_birthday", "show_birthday", "birthdays", "add_email", "edit_email", "get_email", "remove_email", "add_address", "edit_address", "get_address", "remove_address"]
+valid_commands = ["hello", "close", "exit", "add", "remove", "change", "search", "all", "phone", "add_birthday", "show_birthday", "birthdays", "add_email", "edit_email", "get_email", "remove_email", "add_address", "edit_address", "get_address", "remove_address"]
 
 def parse_input(user_input):
     if not user_input:
@@ -25,8 +26,7 @@ def load_data(filename="addressbook.pkl"):
 
 @input_error_handler
 def add_contact(book, *args):
-    if len(args) < 2:
-        raise ValueError("Insufficient arguments for 'add' command. Please provide both name and phone number.")
+    checkForArguments(args, 2, ["name", "phone"])
 
     name, phone, *_ = args
     record = book.find(name)
@@ -47,14 +47,12 @@ def add_contact(book, *args):
     
 @input_error_handler
 def change_contact(book, *args):
-    if len(args) < 3:
-        raise ValueError("Insufficient arguments for 'change' command. Please provide name, old phone number, and new phone number.")
+    checkForArguments(args, 3, ["name", "old_phone", "new_phone"])
 
     name, old_phone, new_phone, *_ = args
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     record.edit_phone(old_phone, new_phone)
 
@@ -62,8 +60,7 @@ def change_contact(book, *args):
 
 @input_error_handler
 def search_contact(book, *args):
-    if len(args) < 1:
-        raise ValueError("Insufficient arguments for 'search' command. Please provide a search query.")
+    checkForArguments(args, 1, ["query"])
 
     query = args[0]
     results = book.search(query)
@@ -77,15 +74,27 @@ def search_contact(book, *args):
         print(record)
 
 @input_error_handler
+def remove_contact(book, *args):
+    checkForArguments(args, 1, ["name"])
+
+    name = args[0]
+    record = book.find(name)
+
+    if record is None:
+        print(f"No contact found with name '{name}'.")
+        return
+
+    book.remove_record(record)
+    print(f"Contact removed: {name}")   
+
+@input_error_handler
 def show_phone(book, *args):
-    if len(args) < 1:
-        raise ValueError("Insufficient arguments for 'phone' command. Please provide the name.")
+    checkForArguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     print(f"Phone numbers for {name}:")
     for phone in record.phones:
@@ -100,14 +109,12 @@ def show_all_contacts(book):
 
 @input_error_handler
 def add_birthday(book, *args):
-    if len(args) < 2:
-        raise ValueError("Insufficient arguments for this command. Please provide both name and birthday.")
+    checkForArguments(args, 2, ["name", "birthday"])
 
     name, birthday, *_ = args
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     record.add_birthday(birthday)
 
@@ -115,14 +122,12 @@ def add_birthday(book, *args):
 
 @input_error_handler
 def show_birthday(book, *args):
-    if len(args) < 1:
-        raise ValueError("Insufficient arguments for this command. Please provide the name.")
+    checkForArguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     birthday = record.get_birthday()
     print(f"Birthday for {name}: {birthday}")
@@ -150,14 +155,12 @@ def upcoming_birthdays(book, *args):
 
 @input_error_handler
 def add_email(book, *args):
-    if len(args) < 2:
-        raise ValueError("Insufficient arguments for this command. Please provide both name and email.")
+    checkForArguments(args, 2, ["name", "email"])
 
     name, email, *_ = args
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     record.add_email(email)
 
@@ -165,17 +168,12 @@ def add_email(book, *args):
 
 @input_error_handler
 def edit_email(book, *args):
-    if len(args) < 2:
-        raise ValueError(
-            "Insufficient arguments for this command. "
-            "Please provide both name and new email."
-        )
+    checkForArguments(args, 2, ["name", "new_email"])
 
     name, new_email, *_ = args
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     old_email = record.get_email()
     record.edit_email(new_email)
@@ -184,61 +182,50 @@ def edit_email(book, *args):
 
 @input_error_handler
 def get_email(book, *args):
-    if len(args) < 1:
-        raise ValueError("Insufficient arguments for this command. Please provide the name.")
+    checkForArguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     email = record.get_email()
     print(f"Email for {name}: {email}")
 
 @input_error_handler
 def remove_email(book, *args):
-    if len(args) < 1:
-        raise ValueError("Insufficient arguments for this command. Please provide the name.")
+    checkForArguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     record.remove_email()
     print(f"Email removed for {name}.")
 
 @input_error_handler
 def add_address(book, *args):
-    if len(args) < 2:
-        raise ValueError("Insufficient arguments for this command. Please provide both name and address.")
+    checkForArguments(args, 2, ["name", "address"])
 
     name, *_ = args
     address = " ".join(args[1:])
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     record.add_address(address)
     print(f"Adding an address: {name} {address}")
 
 @input_error_handler
 def edit_address(book, *args):
-    if len(args) < 2:
-        raise ValueError(
-            "Insufficient arguments for this command. "
-            "Please provide both name and new address."
-        )
+    checkForArguments(args, 2, ["name", "new_address"])
 
     name, *_ = args
     new_address = " ".join(args[1:])
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     old_address = record.get_address()
     record.edit_address(new_address)
@@ -246,28 +233,24 @@ def edit_address(book, *args):
 
 @input_error_handler
 def get_address(book, *args):
-    if len(args) < 1:
-        raise ValueError("Insufficient arguments for this command. Please provide the name.")
+    checkForArguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     address = record.get_address()
     print(f"Address for {name}: {address}")
 
 @input_error_handler
 def remove_address(book, *args):
-    if len(args) < 1:
-        raise ValueError("Insufficient arguments for this command. Please provide the name.")
+    checkForArguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    if record is None:
-        raise ValueError(f"Contact with name '{name}' does not exist.")
+    checkIfRecordExists(record, name)
 
     record.remove_address()
     print(f"Address removed for {name}.")
@@ -290,6 +273,8 @@ def main():
                 change_contact(book, *args)
             elif command == "search":
                 search_contact(book, *args)
+            elif command == "remove":
+                remove_contact(book, *args)
             elif command == "phone":
                 show_phone(book, *args)
             elif command == "all":
