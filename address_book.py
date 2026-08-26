@@ -49,9 +49,8 @@ class AddressBook:
 
         return result
 
-    def delete(self, name):
-        record = self.find(name)
-        if record:
+    def remove_record(self, record):
+        if record.name in self.data:
             del self.data[record.name]
         else:
             raise ValueError("Record not found")
