@@ -129,13 +129,20 @@ def show_birthday(book, *args):
 
 @input_error_handler
 def upcoming_birthdays(book, *args):
-    upcoming_birthdays = book.get_upcoming_birthdays()
+    delta = 7  # Default value if no argument is provided
+    if len(args):
+        try:
+            delta = int(args[0])
+        except ValueError:
+            raise ValueError("Invalid argument for 'birthdays' command. Please provide an integer.")
+
+    upcoming_birthdays = book.get_upcoming_birthdays(delta)
 
     if not upcoming_birthdays:
-        print("No upcoming birthdays in the next 7 days.")
+        print(f"No upcoming birthdays in the next {delta} days.")
         return
 
-    print("Upcoming birthdays in the next 7 days:")
+    print(f"Upcoming birthdays in the next {delta} days:")
     for birthday_info in upcoming_birthdays:
         name = birthday_info["name"]
         congratulation_date = birthday_info["congratulation_date"]
