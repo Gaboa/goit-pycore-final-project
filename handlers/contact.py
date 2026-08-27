@@ -1,9 +1,10 @@
 from utils.decorators import input_error_handler
-from utils.helpers import checkForArguments, checkIfRecordExists
+from utils.helpers import checkForArguments, checkIfRecordExists, checkEmptyPhoneNumber
 from record import Record
 
 @input_error_handler
 def add_contact(book, *args):
+    checkEmptyPhoneNumber(args)
     checkForArguments(args, 2, ["name", "phone"])
 
     name, phone, *_ = args

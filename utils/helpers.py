@@ -5,3 +5,8 @@ def checkIfRecordExists(record, name):
 def checkForArguments(args, length: int, names: list[str]):
     if len(args) < length:
         raise ValueError(f"Insufficient arguments for this command. Please provide the following arguments: {', '.join(names)}.")
+
+def checkEmptyPhoneNumber(args):
+    if len(args) == 1:
+        raise ValueError("Phone number cannot be empty.")
+    pass
