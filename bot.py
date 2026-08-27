@@ -8,7 +8,7 @@ valid_commands = [
     "hello", "close", "exit", "add", "remove", "change", "search", "all", "phone", 
     "add_birthday", "show_birthday", "birthdays", "add_email", "edit_email", 
     "get_email", "remove_email", "add_address", "edit_address", "get_address", 
-    "remove_address", "add_note", "notes", "edit_note", "remove_note"
+    "remove_address", "add_note", "notes", "edit_note", "remove_note", "search_notes"
     ]
 
 def parse_input(user_input):
@@ -334,6 +334,24 @@ def remove_note(book, *args):
     record.delete_note(note_number)
     print(f"Removing Note {note_number} for contact {name}")
 
+@input_error_handler
+def search_notes(book, *args):
+    checkForArguments(args, 1, ['keys'])
+    keys = ' '.join(args)
+
+    result = False
+    for record in book.data.values():
+        matches = record.search_notes(keys)
+        if matches:
+            result = True
+            print(f"Notes for {record.name}:")
+            for note_number, note in matches.items():
+                print(f"{note_number}: {note}")
+            print()
+
+    if not result:
+        print("No matches found.")
+
 def main():
     
     book = load_data()
@@ -391,6 +409,8 @@ def main():
                 edit_note(book, *args)
             elif command == "remove_note":
                 remove_note(book, *args)
+            elif command == "search_notes":
+                search_notes(book, *args)
 
             elif command in ["close", "exit"]:
                 print("Good bye!")

@@ -92,7 +92,12 @@ class Notes:
         for i, (old_k, note) in enumerate(self.notes.items(), start=1):
             renumber[i] = note
         self.notes = renumber
-         
+
+    def search(self, keys):
+        keys = re.sub(r'[^\w\s]', '', keys).lower()
+        return {n: note for n, note in self.notes.items() 
+                if keys in re.sub(r'[^\w\s]', '', note.text).lower()}
+
 class Record:
     def __init__(self, name: str):
         self.name = name
@@ -204,9 +209,8 @@ class Record:
     def delete_note(self, note_number):
         if self.notes is not None:
             self.notes.delete(note_number)
-        
 
-    # def get_notes(self):
-    #     if self.notes is not None:
-    #         return self.notes.notes
-    #     return "N/A"
+    def search_notes(self, keys):
+        if self.notes is not None:
+            return self.notes.search(keys)
+        return {}
