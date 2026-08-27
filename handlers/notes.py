@@ -12,7 +12,11 @@ def add_note(book, *args):
     checkIfRecordExists(record, name)
 
     note = input(f"Enter the Note:\n").strip()
-    note_number = record.add_note(note)
+
+    tags_input = input(f"Enter tags for the note (comma-separated, optional):\n").strip()
+    tags = [tag.strip() for tag in tags_input.split(",") if tag.strip()] if tags_input else None
+
+    note_number = record.add_note(note, tags)
     print(f"Adding Note {note_number} for contact {name}")
 
 @input_error_handler
@@ -36,7 +40,7 @@ def edit_note(book, *args):
 
     show_notes(book, *args)
     try:
-        note_number = int(input(f"Chose Note Number to edit:\n").strip())
+        note_number = int(input(f"Choose Note Number to edit:\n").strip())
     except ValueError:
         raise ValueError("Invalid note number. Provide an integer.")
     
@@ -48,6 +52,45 @@ def edit_note(book, *args):
     print(f"Editing Note {note_number} for contact {name}")
 
 @input_error_handler
+def search_notes_by_tag(book, *args):
+    checkForArguments(args, 1, ["tag"])
+    
+    tag = args[0]
+    result = False
+    for record in book.data.values():
+        matches = record.search_notes_by_tag(tag)
+        if matches:
+            result = True
+            print(f"Notes with tag '{tag}' for {record.name}:")
+            for note_number, note in matches.items():
+                print(f"{note_number}: {note}")
+            print()
+
+    if not result:
+        print(f"No notes found with tag '{tag}'.")
+
+@input_error_handler
+def sort_notes_by_tags(book, *args):
+    notes_by_tags = {}
+    
+    for record in book.data.values():
+        for note_number, note in record.notes.notes.items():
+            for tag in note.tags:
+                if tag not in notes_by_tags:
+                    notes_by_tags[tag] = []
+                notes_by_tags[tag].append((record.name, note_number, note))
+
+    if not notes_by_tags:
+        print("No notes with tags available to sort.")
+        return
+
+    print("Notes sorted by tags:")
+    for tag, notes in notes_by_tags.items():
+        print(f"\nTag: {tag}")
+        for name, note_number, note in notes:
+            print(f"Contact: {name}, Note {note_number}: {note}")
+
+@input_error_handler
 def remove_note(book, *args):
     checkForArguments(args, 1, ["name"])
     
@@ -56,7 +99,7 @@ def remove_note(book, *args):
     checkIfRecordExists(record, name)
 
     show_notes(book, *args)
-    choice = input(f"Chose Note Number to remove or 'all':\n").strip()
+    choice = input(f"Choose Note Number to remove or 'all':\n").strip()
 
     if choice == 'all':
         record.notes.notes.clear()
@@ -98,5 +141,7 @@ command_handler_map = {
     "notes": show_notes,
     "edit_note": edit_note,
     "remove_note": remove_note,
-    "search_notes": search_notes
+    "search_notes": search_notes,
+    "search_notes_by_tag": search_notes_by_tag,
+    "sort_notes_by_tags": sort_notes_by_tags,
 }

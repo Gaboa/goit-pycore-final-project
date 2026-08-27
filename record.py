@@ -54,19 +54,30 @@ class Address:
         raise ValueError("Address cannot be empty.")
 
 class Note:
-    def __init__(self, text: str):
+    def __init__(self, text: str, tags = None):
         self.text = text.strip()
+        self.tags = []
+
+        if tags:
+            self.add_tags(tags)
+
+    def add_tags(self, tags):
+        for tag in tags:
+            tag = tag.strip().lower()
+            if tag and tag not in self.tags:
+                self.tags.append(tag)
 
     def __str__(self):
-        return self.text
+        tags = ", ".join(self.tags) if self.tags else "No tags"
+        return f"{self.text} | Tags: {tags}"
 
 class Notes:
     def __init__(self, notes: dict):
         self.notes: dict[int, Note] = notes if notes is not None else {}
 
-    def add(self, text):
+    def add(self, text, tags=None):
         note_number = len(self.notes) + 1
-        self.notes[note_number] = Note(text)
+        self.notes[note_number] = Note(text, tags)
         return note_number
 
     def __str__(self):
@@ -97,6 +108,10 @@ class Notes:
         keys = re.sub(r'[^\w\s]', '', keys).lower()
         return {n: note for n, note in self.notes.items() 
                 if keys in re.sub(r'[^\w\s]', '', note.text).lower()}
+
+    def search_by_tag(self, tag):
+        tag = tag.strip().lower()
+        return {number: note for number, note in self.notes.items() if tag in note.tags}
 
 class Record:
     def __init__(self, name: str):
@@ -197,12 +212,12 @@ class Record:
 
     # Notes methods
 
-    def add_note(self, text: str):
-        return self.notes.add(text)
+    def add_note(self, text: str, tags=None):
+        return self.notes.add(text, tags)
 
     def edit_note(self, note_number, new_note):
-        if note_number in self.notes.notes.keys():
-            self.notes.notes[note_number] = Note(new_note)
+        if note_number in self.notes.notes:
+            self.notes.notes[note_number].text = new_note.strip()
         else:
             raise ValueError(f"Note number {note_number} not found.")
 
@@ -213,4 +228,9 @@ class Record:
     def search_notes(self, keys):
         if self.notes is not None:
             return self.notes.search(keys)
+        return {}
+
+    def search_notes_by_tag(self, tag):
+        if self.notes is not None:
+            return self.notes.search_by_tag(tag)
         return {}
