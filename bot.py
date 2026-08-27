@@ -47,7 +47,7 @@ def main():
             print("Invalid command. Please try again.")
             continue
 
-        try:
+        try: 
             if command in command_handler_map:
                 command_handler_map[command](book, *args)
             elif command == "hello":
