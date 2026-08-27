@@ -1,10 +1,10 @@
 from address_book import AddressBook
-from record import Record
+from record import Record, Phone, Birthday, Email
 from decorators import input_error_handler
 from helpers import checkForArguments, checkIfRecordExists
 import pickle
 
-valid_commands = ["hello", "close", "exit", "add", "remove", "change", "search", "all", "phone", "add_birthday", "show_birthday", "birthdays", "add_email", "edit_email", "get_email", "remove_email", "add_address", "edit_address", "get_address", "remove_address"]
+valid_commands = ["hello", "close", "exit", "add", "remove", "change", "search", "all", "phone", "add_birthday", "show_birthday", "birthdays", "add_email", "edit_email", "get_email", "remove_email", "add_address", "edit_address", "get_address", "remove_address", "experimental_add"]
 
 def parse_input(user_input):
     if not user_input:
@@ -215,7 +215,7 @@ def add_address(book, *args):
     checkIfRecordExists(record, name)
 
     record.add_address(address)
-    print(f"Adding an address: {name} {address}")
+    print(f"Adding an address: {name} {address}") 
 
 @input_error_handler
 def edit_address(book, *args):
@@ -255,6 +255,59 @@ def remove_address(book, *args):
     record.remove_address()
     print(f"Address removed for {name}.")
 
+def experimental_add_contact(book: AddressBook, contact: dict[str, str | None]) -> None:
+    name, phone, email, birthday, address = contact.values()
+    record = book.find(name)
+
+    if record is None:
+        record = Record(name)
+        book.add_record(record)
+
+    if address:
+        record.add_address(address)
+    if phone:
+        record.add_phone(phone)
+    if email:
+        record.add_email(email)
+    if birthday:
+        record.add_birthday(birthday)
+
+    print(f"Contact added: {name}")
+
+def input_name() -> str:
+    while True:
+        value = input("Enter your name*: ").strip()
+
+        if value:
+            return value
+        else:
+            print("Please enter your name")
+
+def input_optional_value(prompt: str, validator) -> str | None:
+    while True:
+        value = input(prompt).strip()
+
+        if not value:
+            return None
+
+        try:
+            validator(value)
+            return value
+        except ValueError as e:
+            print(e)
+
+def multiline_input() -> dict[str, str | None]:
+    contact = {}
+
+    contact["name"] = input_name()
+    contact["phone"] = input_optional_value("Enter your phone (leave empty to skip): ", Phone)
+    contact["email"] = input_optional_value("Enter your email (leave empty to skip): ", Email)
+    contact["birthday"] = input_optional_value("Enter your birthday (leave empty to skip): ", Birthday)
+    contact["address"] = input("Enter your address (leave empty to skip): ").strip()
+
+    return contact
+
+
 def main():
     book = load_data()
     print("Welcome to the assistant bot!")
@@ -269,6 +322,9 @@ def main():
         try:
             if command == "add":
                 add_contact(book, *args)
+            elif command == "experimental_add":
+                contact_data = multiline_input()
+                experimental_add_contact(book, contact_data)
             elif command == "change":
                 change_contact(book, *args)
             elif command == "search":
