@@ -287,7 +287,6 @@ def show_notes(book, *args):
 
 @input_error_handler
 def edit_note(book, *args):
-    # checkForArguments(args, 2, ["name", "note_number"])
     checkForArguments(args, 1, ["name"])
     
     name, *_ = args
