@@ -60,13 +60,15 @@ class Record:
         self.birthday = None
         self.email = None
         self.address = None
+        self.note = None
     def __str__(self):
         return (
             f"Contact name: {self.name}\n" 
             f"Phones: {'; '.join(p.number for p in self.phones)}\n" 
             f"Birthday: {self.birthday.date if self.birthday else 'N/A'}\n" 
             f"Email: {self.email.email if self.email else 'N/A'}\n" 
-            f"Address: {self.address.address if self.address else 'N/A'}"
+            f"Address: {self.address.address if self.address else 'N/A'}\n"
+            f"Note: {self.note if self.note else 'N/A'}"
             )
 
     # Phone methods
@@ -146,3 +148,25 @@ class Record:
             self.address = None
         else:
             raise ValueError("No address to remove.")
+
+    # Notes methods
+    def add_note(self, note: str):
+        self.note = note
+
+    def edit_note(self, note: str):
+        if self.note is not None:
+            self.note = note
+        else:
+            raise ValueError("No note to edit. Please add a note first.")
+        
+    def get_note(self):
+        if self.note is not None:
+            return self.note
+        return "N/A"
+    
+    def remove_note(self):
+        if self.note is not None:
+            self.note = None
+        else:
+            raise ValueError("No note to remove.")
+    

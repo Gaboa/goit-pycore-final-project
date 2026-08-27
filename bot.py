@@ -4,7 +4,7 @@ from decorators import input_error_handler
 from helpers import checkForArguments, checkIfRecordExists
 import pickle
 
-valid_commands = ["hello", "close", "exit", "add", "remove", "change", "search", "all", "phone", "add_birthday", "show_birthday", "birthdays", "add_email", "edit_email", "get_email", "remove_email", "add_address", "edit_address", "get_address", "remove_address"]
+valid_commands = ["hello", "close", "exit", "add", "remove", "change", "search", "all", "phone", "add_birthday", "show_birthday", "birthdays", "add_email", "edit_email", "get_email", "remove_email", "add_address", "edit_address", "get_address", "remove_address", "add_note", "get_note", "edit_note"]
 
 def parse_input(user_input):
     if not user_input:
@@ -255,6 +255,60 @@ def remove_address(book, *args):
     record.remove_address()
     print(f"Address removed for {name}.")
 
+# Note 
+
+@input_error_handler
+def add_note(book, *args):
+    checkForArguments(args, 2, ["name", "note"])
+
+    name, *_ = args
+    note = " ".join(args[1:])
+    record = book.find(name)
+
+    checkIfRecordExists(record, name)
+
+    record.add_note(note)
+    print(f"Adding an note: {name} {note}")
+
+@input_error_handler
+def edit_note(book, *args):
+    checkForArguments(args, 2, ["name", "new_note"])
+
+    name, *_ = args
+    new_note = " ".join(args[1:])
+    record = book.find(name)
+
+    checkIfRecordExists(record, name)
+
+    old_note = record.get_note()
+    record.edit_note(new_note)
+    print(f"Editing note: {name}: {old_note} -> {new_note}")
+
+@input_error_handler
+def get_note(book, *args):
+    checkForArguments(args, 1, ["name"])
+
+    name, *_ = args
+    record = book.find(name)
+
+    checkIfRecordExists(record, name)
+
+    note = record.get_note()
+    print(f"Note for {name}: {note}")
+
+@input_error_handler
+def remove_note(book, *args):
+    checkForArguments(args, 1, ["name"])
+
+    name, *_ = args
+    record = book.find(name)
+
+    checkIfRecordExists(record, name)
+
+    record.remove_note()
+    print(f"Note removed for {name}.")
+
+
 def main():
     book = load_data()
     print("Welcome to the assistant bot!")
@@ -303,6 +357,16 @@ def main():
                 get_address(book, *args)
             elif command == "remove_address":
                 remove_address(book, *args)
+            # Note 
+            elif command == "add_note":
+                add_note(book, *args)
+            elif command == "edit_note":
+                edit_note(book, *args)
+            elif command == "get_note":
+                get_note(book, *args)
+            elif command == "remove_note":
+                remove_address(book, *args)
+            # Close program
             elif command in ["close", "exit"]:
                 print("Good bye!")
                 save_data(book)
