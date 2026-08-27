@@ -53,6 +53,46 @@ class Address:
             return address
         raise ValueError("Address cannot be empty.")
 
+class Note:
+    def __init__(self, text: str):
+        self.text = text.strip()
+
+    def __str__(self):
+        return self.text
+
+class Notes:
+    def __init__(self, notes: dict):
+        self.notes: dict[int, Note] = notes if notes is not None else {}
+
+    def add(self, text):
+        note_number = len(self.notes) + 1
+        self.notes[note_number] = Note(text)
+        return note_number
+
+    def __str__(self):
+        if not self.notes:
+            return 'No notes available.'
+        return "\n".join(f"{n}: {note}" for n, note in self.notes.items()) 
+
+    def short(self):
+        if not self.notes:
+            return 'N/A'
+        notes_list = list(self.notes.values())
+        if len(notes_list) == 1:
+            return str(notes_list[0])
+        return f'{notes_list[0]} and {len(notes_list) - 1} more'
+
+    def delete(self, note_number):
+        if note_number not in self.notes:
+            raise ValueError(f"Note number {note_number} not found.")
+
+        del self.notes[note_number]
+
+        renumber = {}
+        for i, (old_k, note) in enumerate(self.notes.items(), start=1):
+            renumber[i] = note
+        self.notes = renumber
+         
 class Record:
     def __init__(self, name: str):
         self.name = name
@@ -60,13 +100,16 @@ class Record:
         self.birthday = None
         self.email = None
         self.address = None
+        self.notes = Notes({})
+
     def __str__(self):
         return (
             f"Contact name: {self.name}\n" 
             f"Phones: {'; '.join(p.number for p in self.phones)}\n" 
             f"Birthday: {self.birthday.date if self.birthday else 'N/A'}\n" 
             f"Email: {self.email.email if self.email else 'N/A'}\n" 
-            f"Address: {self.address.address if self.address else 'N/A'}"
+            f"Address: {self.address.address if self.address else 'N/A'}\n"
+            f"Notes: {self.notes.short() if self.notes else 'N/A'}"
             )
 
     # Phone methods
@@ -146,3 +189,24 @@ class Record:
             self.address = None
         else:
             raise ValueError("No address to remove.")
+
+    # Notes methods
+
+    def add_note(self, text: str):
+        return self.notes.add(text)
+
+    def edit_note(self, note_number, new_note):
+        if note_number in self.notes.notes.keys():
+            self.notes.notes[note_number] = Note(new_note)
+        else:
+            raise ValueError(f"Note number {note_number} not found.")
+
+    def delete_note(self, note_number):
+        if self.notes is not None:
+            self.notes.delete(note_number)
+        
+
+    # def get_notes(self):
+    #     if self.notes is not None:
+    #         return self.notes.notes
+    #     return "N/A"
