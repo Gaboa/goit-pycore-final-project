@@ -98,6 +98,15 @@ def remove_note(book, *args):
     record = book.find(name)
     checkIfRecordExists(record, name)
 
+    if not record.notes.notes:
+        print(f"No notes found for contact {name}.")
+        return
+
+    if len(record.notes.notes) == 1:
+        record.notes.notes.clear()
+        print(f"Removing Note for contact {name}")
+        return
+
     show_notes(book, *args)
     choice = input(f"Choose Note Number to remove or 'all':\n").strip()
 
