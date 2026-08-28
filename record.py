@@ -81,6 +81,13 @@ class Note:
             if tag and tag not in self.tags:
                 self.tags.append(tag)
 
+    def edit_tags(self, tags):
+        self.tags = []
+        self.add_tags(tags)
+
+    def remove_tags(self):
+        self.tags.clear()
+
     def __str__(self):
         tags = ", ".join(self.tags) if self.tags else "No tags"
         return f"{self.text} | Tags: {tags}"
@@ -238,6 +245,18 @@ class Record:
     def edit_note(self, note_number, new_note):
         if note_number in self.notes.notes:
             self.notes.notes[note_number].text = new_note.strip()
+        else:
+            raise ValueError(f"Note number {note_number} not found.")
+
+    def edit_note_tags(self, note_number, tags):
+        if note_number in self.notes.notes:
+            self.notes.notes[note_number].edit_tags(tags)
+        else:
+            raise ValueError(f"Note number {note_number} not found.")
+
+    def remove_note_tags(self, note_number):
+        if note_number in self.notes.notes:
+            self.notes.notes[note_number].remove_tags()
         else:
             raise ValueError(f"Note number {note_number} not found.")
 

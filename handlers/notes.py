@@ -1,8 +1,27 @@
+from prompt_toolkit import print_formatted_text
+from prompt_toolkit.formatted_text import FormattedText
+
 from utils.decorators import input_error_handler
 from utils.helpers import checkForArguments, checkIfRecordExists
 
-
 # Нотатки
+
+
+def print_note(note_number, note):
+    tags = ", ".join(note.tags) if note.tags else "No tags"
+
+    formatted_note = FormattedText(
+        [
+            ("ansiyellow bold", f"{note_number}: "),
+            ("", note.text),
+            ("ansicyan", " | Tags: "),
+            ("ansigreen", tags),
+        ]
+    )
+
+    print_formatted_text(formatted_note)
+
+
 @input_error_handler
 def add_note(book, *args):
     checkForArguments(args, 1, ["name"])
@@ -34,7 +53,13 @@ def show_notes(book, *args):
 
     checkIfRecordExists(record, name)
 
-    print(f"Notes for {name}:\n{record.notes}")
+    if not record.notes.notes:
+        print(f"No notes found for contact {name}.")
+        return
+
+    print(f"Notes for contact {name}:")
+    for note_number, note in record.notes.notes.items():
+        print_note(note_number, note)
 
 
 @input_error_handler
@@ -45,16 +70,38 @@ def edit_note(book, *args):
     record = book.find(name)
     checkIfRecordExists(record, name)
 
+    if not record.notes.notes:
+        print(f"No notes found for contact {name}.")
+        return
+
     show_notes(book, *args)
+
     try:
         note_number = int(input("Choose Note Number to edit:\n").strip())
     except ValueError:
-        raise ValueError("Invalid note number. Provide an integer.")
+        raise ValueError("Invalid note number. Please provide the correct note number.")
 
     if note_number <= 0 or note_number > len(record.notes.notes):
         raise ValueError(f"Note number {note_number} not found.")
 
     new_note = input("Enter the new Note:\n").strip()
+    record.edit_note(note_number, new_note)
+    edit_tags = (
+        input("Would you like to edit tags for this note? (y/n): \n").strip().lower()
+    )
+
+    if edit_tags == "y":
+        tags_input = input(
+            "Enter new tags for the note (comma-separated, optional): \n"
+        ).strip()
+
+        if tags_input:
+            tags = [tag.strip() for tag in tags_input.split(",") if tag.strip()]
+            record.edit_note_tags(note_number, tags)
+
+        else:
+            record.remove_note_tags(note_number)
+
     record.edit_note(note_number, new_note)
     print(f"Editing Note {note_number} for contact {name}")
 
@@ -69,9 +116,9 @@ def search_notes_by_tag(book, *args):
         matches = record.search_notes_by_tag(tag)
         if matches:
             result = True
-            print(f"Notes with tag '{tag}' for {record.name}:")
+            print(f"Notes with tag '{tag}' for contact {record.name}:")
             for note_number, note in matches.items():
-                print(f"{note_number}: {note}")
+                print_note(note_number, note)
             print()
 
     if not result:
@@ -97,7 +144,7 @@ def sort_notes_by_tags(book, *args):
     for tag, notes in notes_by_tags.items():
         print(f"\nTag: {tag}")
         for name, note_number, note in notes:
-            print(f"Contact: {name}, Note {note_number}: {note}")
+            print_note(note_number, note)
 
 
 @input_error_handler
@@ -128,7 +175,7 @@ def remove_note(book, *args):
     try:
         note_number = int(choice)
     except ValueError:
-        raise ValueError("Invalid note number. Provide an integer.")
+        raise ValueError("Invalid note number. Please provide the correct note number.")
 
     if note_number <= 0 or note_number > len(record.notes.notes):
         raise ValueError(f"Note number {note_number} not found.")
@@ -147,9 +194,9 @@ def search_notes(book, *args):
         matches = record.search_notes(keys)
         if matches:
             result = True
-            print(f"Notes for {record.name}:")
+            print(f"Notes for contact {record.name}:")
             for note_number, note in matches.items():
-                print(f"{note_number}: {note}")
+                print_note(note_number, note)
             print()
 
     if not result:
