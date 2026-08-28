@@ -89,7 +89,6 @@ def edit_note(book, *args):
     edit_tags = (
         input("Would you like to edit tags for this note? (y/n): \n").strip().lower()
     )
-
     if edit_tags == "y":
         tags_input = input(
             "Enter new tags for the note (comma-separated, optional): \n"
