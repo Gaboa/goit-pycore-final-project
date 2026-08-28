@@ -21,6 +21,7 @@ command_handler_map.update(notes_command_handler_map)
 
 valid_commands = list(command_handler_map.keys())
 valid_commands.extend(["hello", "close", "exit"])
+valid_options = [HELP_FLAG]
 
 
 def parse_input(user_input):
@@ -48,7 +49,7 @@ def main():
 
     book = load_data("data/addressbook.pkl", AddressBook)
 
-    bindings = create_autocomplete_bindings(valid_commands)
+    bindings = create_autocomplete_bindings(valid_commands, valid_options)
     session = PromptSession(key_bindings=bindings)
 
     print("Welcome to the assistant bot!")
@@ -66,7 +67,7 @@ def main():
 
             continue
 
-        if " ".join(args).strip() == HELP_FLAG:
+        if args == [HELP_FLAG]:
             print(get_help_hint(command, help_hints))
 
             continue

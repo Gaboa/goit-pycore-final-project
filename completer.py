@@ -21,20 +21,33 @@ def find_command(command: str, all_commands: list[str]):
 def get_tab_suggestions(
     text_before_cursor: str,
     all_commands: list[str],
-) -> list[str]:
-    normalize_text = text_before_cursor.lower()
+    all_options: list[str],
+) -> tuple[str, list[str]]:
+    normalized_text = text_before_cursor.lower()
 
-    if not normalize_text.strip():
-        return all_commands
+    if not normalized_text.strip():
+        return "commands", all_commands
 
-    if len(normalize_text.split(" ")) >= 1 and normalize_text[-1] == " ":
-        return []
+    if normalized_text[-1].isspace():
+        return "", []
 
-    return find_command(normalize_text, all_commands)
+    tokens = normalized_text.split()
+
+    if len(tokens) == 1:
+        return "commands", find_command(tokens[0], all_commands)
+
+    if len(tokens) == 2:
+        command, option_prefix = tokens
+
+        if command in all_commands and option_prefix.startswith("-"):
+            return "options", find_command(option_prefix, all_options)
+
+    return "", []
 
 
 def create_autocomplete_bindings(
     all_commands: list[str],
+    all_options: list[str],
 ) -> KeyBindings:
     bindings = KeyBindings()
 
@@ -42,15 +55,16 @@ def create_autocomplete_bindings(
     async def handle_tab(event):
         text_before_cursor = event.current_buffer.document.text_before_cursor
 
-        suggestions = get_tab_suggestions(
+        suggestion_type, suggestions = get_tab_suggestions(
             text_before_cursor,
             all_commands,
+            all_options,
         )
 
         if not suggestions:
             return
 
-        message = f"Potential commands: {', '.join(suggestions)}"
+        message = f"Potential {suggestion_type}: {', '.join(suggestions)}"
 
         await run_in_terminal(lambda: print(message))
 
