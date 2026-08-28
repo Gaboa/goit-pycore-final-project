@@ -1,6 +1,9 @@
 import pickle
 
+from prompt_toolkit import PromptSession
+
 from address_book import AddressBook
+from completer import create_autocomplete_bindings, find_command
 from handlers.address import command_handler_map as address_command_handler_map
 from handlers.birthday import command_handler_map as birthday_command_handler_map
 from handlers.contact import command_handler_map as contact_command_handler_map
@@ -42,13 +45,23 @@ def load_data(filename, book_class):
 def main():
 
     book = load_data("data/addressbook.pkl", AddressBook)
+
+    bindings = create_autocomplete_bindings(valid_commands)
+    session = PromptSession(key_bindings=bindings)
+
     print("Welcome to the assistant bot!")
     while True:
-        command_input = input("Enter a command >>> ").strip()
+        command_input = session.prompt("Enter a command >>> ").strip()
         command, *args = parse_input(command_input)
 
         if command not in valid_commands:
-            print("Invalid command. Please try again.")
+            potential_commands = find_command(command, valid_commands)
+
+            if potential_commands:
+                print(f"Possible commands: {', '.join(potential_commands)}")
+            else:
+                print("Invalid command. Please try again.")
+
             continue
 
         try:

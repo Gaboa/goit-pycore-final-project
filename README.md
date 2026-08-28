@@ -19,6 +19,7 @@ The bot can:
 - 🎂 Save birthdays and show upcoming ones
 - 📝 Add, edit, remove, and search notes
 - 🔍 Search contacts by name
+- ⌨️ Suggest matching commands when you press `Tab`
 - ✅ Validate entered data
 - 💾 Save the address book using `pickle`
 
@@ -54,10 +55,12 @@ project/
 ├── .gitignore
 ├── address_book.py
 ├── bot.py
+├── completer.py
 ├── pyproject.toml
 ├── record.py
-├── README.md
-└── requirements-dev.txt
+├── requirements-dev.txt
+├── requirements.txt
+└── README.md
 ```
 
 We separated the handlers and utilities into folders to keep the project easier to navigate and avoid one huge `bot.py` 😅
@@ -118,7 +121,14 @@ dependencies isolated from other Python projects on your computer.
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
    ```
 
-4. If you will change the code, install the development tools, including Ruff:
+4. Install the project dependencies:
+
+   ```bash
+   python -m pip install -r requirements.txt
+   ```
+
+   If you will change the code, install the development dependencies instead.
+   This also installs all dependencies from `requirements.txt`:
 
    ```bash
    python -m pip install -r requirements-dev.txt
@@ -152,6 +162,37 @@ Enter a command >>>
 ```
 
 And you're ready to go! 🚀
+
+---
+
+## ⌨️ Command suggestions
+
+While entering a command, press `Tab` to display every command that starts
+with the text before the cursor. The closest exact match is shown first, and
+the remaining matches are sorted alphabetically.
+
+For example, enter `add` and press `Tab`:
+
+```text
+Enter a command >>> add
+Potential commands: add, add_address, add_birthday, add_contact, add_email, add_note
+Enter a command >>> add
+```
+
+The bot only displays suggestions: it does not complete or execute a command.
+Your input and cursor position remain unchanged, so you can continue typing.
+Pressing `Tab` on an empty prompt displays all available commands. Once you
+start entering command arguments, `Tab` does not suggest argument values.
+
+If you submit an incomplete command with `Enter`, the bot also displays
+matching commands as a fallback:
+
+```text
+Enter a command >>> pho
+Possible commands: phone
+```
+
+You must then enter the complete command yourself.
 
 ---
 
@@ -311,6 +352,6 @@ So basically:
 
 ## 🛠️ Built With
 
-**Python** • **OOP** • **Decorators** • **Regex** • **Datetime** • **Pickle** • **Git & GitHub**
+**Python** • **prompt_toolkit** • **OOP** • **Decorators** • **Regex** • **Datetime** • **Pickle** • **Git & GitHub**
 
 Made as a team project while learning Python, working with Git, fixing bugs, and occasionally creating new ones in the process 😅
