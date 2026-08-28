@@ -2,7 +2,7 @@ from prompt_toolkit.application import run_in_terminal
 from prompt_toolkit.key_binding import KeyBindings
 
 
-def find_command(command: str, all_commands: list[str]):
+def find_command(command: str, all_commands: list[str]) -> list[str]:
     potential_commands = [
         valid_command
         for valid_command in all_commands
@@ -52,7 +52,7 @@ def create_autocomplete_bindings(
     bindings = KeyBindings()
 
     @bindings.add("tab")
-    async def handle_tab(event):
+    async def handle_tab(event) -> None:
         text_before_cursor = event.current_buffer.document.text_before_cursor
 
         suggestion_type, suggestions = get_tab_suggestions(
