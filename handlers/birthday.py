@@ -1,6 +1,7 @@
 from utils.decorators import input_error_handler
 from utils.helpers import checkForArguments, checkIfRecordExists
 
+
 @input_error_handler
 def add_birthday(book, *args):
     checkForArguments(args, 2, ["name", "birthday"])
@@ -14,6 +15,7 @@ def add_birthday(book, *args):
 
     print(f"Adding a birthday: {name} {birthday}")
 
+
 @input_error_handler
 def show_birthday(book, *args):
     checkForArguments(args, 1, ["name"])
@@ -26,6 +28,7 @@ def show_birthday(book, *args):
     birthday = record.get_birthday()
     print(f"Birthday for {name}: {birthday}")
 
+
 @input_error_handler
 def upcoming_birthdays(book, *args):
     delta = 7  # Default value if no argument is provided
@@ -33,7 +36,9 @@ def upcoming_birthdays(book, *args):
         try:
             delta = int(args[0])
         except ValueError:
-            raise ValueError("Invalid argument for 'birthdays' command. Please provide an integer.")
+            raise ValueError(
+                "Invalid argument for 'birthdays' command. Please provide an integer."
+            )
 
     upcoming_birthdays = book.get_upcoming_birthdays(delta)
 
@@ -47,9 +52,10 @@ def upcoming_birthdays(book, *args):
         congratulation_date = birthday_info["congratulation_date"]
         print(f"{name}: {congratulation_date}")
 
+
 command_handler_map = {
     "add_birthday": add_birthday,
     "show_birthday": show_birthday,
     "upcoming_birthdays": upcoming_birthdays,
-    "birthdays": upcoming_birthdays
+    "birthdays": upcoming_birthdays,
 }

@@ -6,4 +6,5 @@ def input_error_handler(func):
             print(f"Error: {e}")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
+
     return wrapper

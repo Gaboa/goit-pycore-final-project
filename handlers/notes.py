@@ -1,6 +1,7 @@
 from utils.decorators import input_error_handler
 from utils.helpers import checkForArguments, checkIfRecordExists
 
+
 # Нотатки
 @input_error_handler
 def add_note(book, *args):
@@ -11,13 +12,18 @@ def add_note(book, *args):
 
     checkIfRecordExists(record, name)
 
-    note = input(f"Enter the Note:\n").strip()
+    note = input("Enter the Note:\n").strip()
 
-    tags_input = input(f"Enter tags for the note (comma-separated, optional):\n").strip()
-    tags = [tag.strip() for tag in tags_input.split(",") if tag.strip()] if tags_input else None
+    tags_input = input("Enter tags for the note (comma-separated, optional):\n").strip()
+    tags = (
+        [tag.strip() for tag in tags_input.split(",") if tag.strip()]
+        if tags_input
+        else None
+    )
 
     note_number = record.add_note(note, tags)
     print(f"Adding Note {note_number} for contact {name}")
+
 
 @input_error_handler
 def show_notes(book, *args):
@@ -30,31 +36,33 @@ def show_notes(book, *args):
 
     print(f"Notes for {name}:\n{record.notes}")
 
+
 @input_error_handler
 def edit_note(book, *args):
     checkForArguments(args, 1, ["name"])
-    
+
     name, *_ = args
     record = book.find(name)
     checkIfRecordExists(record, name)
 
     show_notes(book, *args)
     try:
-        note_number = int(input(f"Choose Note Number to edit:\n").strip())
+        note_number = int(input("Choose Note Number to edit:\n").strip())
     except ValueError:
         raise ValueError("Invalid note number. Provide an integer.")
-    
+
     if note_number <= 0 or note_number > len(record.notes.notes):
         raise ValueError(f"Note number {note_number} not found.")
 
-    new_note = input(f"Enter the new Note:\n").strip()
+    new_note = input("Enter the new Note:\n").strip()
     record.edit_note(note_number, new_note)
     print(f"Editing Note {note_number} for contact {name}")
+
 
 @input_error_handler
 def search_notes_by_tag(book, *args):
     checkForArguments(args, 1, ["tag"])
-    
+
     tag = args[0]
     result = False
     for record in book.data.values():
@@ -69,10 +77,11 @@ def search_notes_by_tag(book, *args):
     if not result:
         print(f"No notes found with tag '{tag}'.")
 
+
 @input_error_handler
 def sort_notes_by_tags(book, *args):
     notes_by_tags = {}
-    
+
     for record in book.data.values():
         for note_number, note in record.notes.notes.items():
             for tag in note.tags:
@@ -90,10 +99,11 @@ def sort_notes_by_tags(book, *args):
         for name, note_number, note in notes:
             print(f"Contact: {name}, Note {note_number}: {note}")
 
+
 @input_error_handler
 def remove_note(book, *args):
     checkForArguments(args, 1, ["name"])
-    
+
     name, *_ = args
     record = book.find(name)
     checkIfRecordExists(record, name)
@@ -108,28 +118,29 @@ def remove_note(book, *args):
         return
 
     show_notes(book, *args)
-    choice = input(f"Choose Note Number to remove or 'all':\n").strip()
+    choice = input("Choose Note Number to remove or 'all':\n").strip()
 
-    if choice == 'all':
+    if choice == "all":
         record.notes.notes.clear()
         print(f"All notes removed for contact {name}")
         return
-    
+
     try:
         note_number = int(choice)
     except ValueError:
         raise ValueError("Invalid note number. Provide an integer.")
-    
+
     if note_number <= 0 or note_number > len(record.notes.notes):
         raise ValueError(f"Note number {note_number} not found.")
 
     record.delete_note(note_number)
     print(f"Removing Note {note_number} for contact {name}")
 
+
 @input_error_handler
 def search_notes(book, *args):
-    checkForArguments(args, 1, ['keys'])
-    keys = ' '.join(args)
+    checkForArguments(args, 1, ["keys"])
+    keys = " ".join(args)
 
     result = False
     for record in book.data.values():
@@ -143,6 +154,7 @@ def search_notes(book, *args):
 
     if not result:
         print("No matches found.")
+
 
 command_handler_map = {
     "add_note": add_note,
