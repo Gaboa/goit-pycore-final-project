@@ -9,6 +9,8 @@ from handlers.birthday import command_handler_map as birthday_command_handler_ma
 from handlers.contact import command_handler_map as contact_command_handler_map
 from handlers.email import command_handler_map as email_command_handler_map
 from handlers.notes import command_handler_map as notes_command_handler_map
+from hints_collection import HELP_FLAG, help_hints
+from utils.options import get_help_hint
 
 command_handler_map = {}
 command_handler_map.update(address_command_handler_map)
@@ -61,6 +63,11 @@ def main():
                 print(f"Possible commands: {', '.join(potential_commands)}")
             else:
                 print("Invalid command. Please try again.")
+
+            continue
+
+        if " ".join(args).strip() == HELP_FLAG:
+            print(get_help_hint(command, help_hints))
 
             continue
 
