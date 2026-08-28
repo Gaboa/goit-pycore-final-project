@@ -64,8 +64,30 @@ def create_autocomplete_bindings(
         if not suggestions:
             return
 
+        if len(suggestions) == 1:
+            replace_current_token(
+                event.current_buffer,
+                suggestions[0],
+            )
+            return
+
         message = f"Potential {suggestion_type}: {', '.join(suggestions)}"
 
         await run_in_terminal(lambda: print(message))
 
     return bindings
+
+
+def replace_current_token(
+    buffer,
+    suggestion: str,
+) -> None:
+    document = buffer.document
+
+    token = document.get_word_under_cursor(WORD=True)
+    token_before_cursor = document.get_word_before_cursor(WORD=True)
+    token_after_cursor_length = len(token) - len(token_before_cursor)
+
+    buffer.delete_before_cursor(len(token_before_cursor))
+    buffer.delete(token_after_cursor_length)
+    buffer.insert_text(suggestion)
