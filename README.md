@@ -20,6 +20,7 @@ The bot can:
 - 📝 Add, edit, remove, and search notes
 - 🔍 Search contacts by name
 - ⌨️ Suggest matching commands when you press `Tab`
+- 💡 Show command instructions with `--help` or `help`
 - ✅ Validate entered data
 - 💾 Save the address book using `pickle`
 
@@ -50,12 +51,14 @@ project/
 │
 ├── utils/
 │   ├── decorators.py
-│   └── helpers.py
+│   ├── helpers.py
+│   └── options.py
 │
 ├── .gitignore
 ├── address_book.py
 ├── bot.py
 ├── completer.py
+├── hints_collection.py
 ├── pyproject.toml
 ├── record.py
 ├── requirements-dev.txt
@@ -184,6 +187,16 @@ Your input and cursor position remain unchanged, so you can continue typing.
 Pressing `Tab` on an empty prompt displays all available commands. Once you
 start entering command arguments, `Tab` does not suggest argument values.
 
+The exception is command options: after entering `-` as the first argument of
+a valid command, press `Tab` to show matching options. Currently, the bot
+supports the `--help` option:
+
+```text
+Enter a command >>> add --h
+Potential options: --help
+Enter a command >>> add --h
+```
+
 If you submit an incomplete command with `Enter`, the bot also displays
 matching commands as a fallback:
 
@@ -193,6 +206,21 @@ Possible commands: phone
 ```
 
 You must then enter the complete command yourself.
+
+---
+
+## 💡 Help
+
+Add `--help` after any command to display its description, syntax, and an
+example without executing the command:
+
+```text
+Enter a command >>> add --help
+```
+
+Use `help` to display all available command instructions. Commands with
+aliases list every supported name in the same help entry, for example `add`
+and `add_contact`.
 
 ---
 
@@ -316,6 +344,7 @@ For adding, editing, and removing notes, the bot will ask for the necessary info
 | Command | What it does                    |
 | ------- | ------------------------------- |
 | `hello` | Say hello to the bot 👋         |
+| `help`  | Show instructions for all commands |
 | `exit`  | Save data and close the program |
 | `close` | Save data and close the program |
 
