@@ -6,6 +6,7 @@ from utils.helpers import checkForArguments, checkIfRecordExists
 
 # Нотатки
 
+
 def print_note(note_number, note):
     tags = ", ".join(note.tags) if note.tags else "No tags"
 
@@ -19,6 +20,7 @@ def print_note(note_number, note):
     )
 
     print_formatted_text(formatted_note)
+
 
 @input_error_handler
 def add_note(book, *args):
@@ -101,9 +103,6 @@ def edit_note(book, *args):
         else:
             record.remove_note_tags(note_number)
 
-    print(f"Editing Note {note_number} for contact {name}")
-
-    new_note = input("Enter the new Note:\n").strip()
     record.edit_note(note_number, new_note)
     print(f"Editing Note {note_number} for contact {name}")
 

@@ -81,6 +81,13 @@ class Note:
             if tag and tag not in self.tags:
                 self.tags.append(tag)
 
+    def edit_tags(self, tags):
+        self.tags = []
+        self.add_tags(tags)
+
+    def remove_tags(self):
+        self.tags.clear()
+
     def __str__(self):
         tags = ", ".join(self.tags) if self.tags else "No tags"
         return f"{self.text} | Tags: {tags}"
@@ -94,13 +101,6 @@ class Notes:
         note_number = len(self.notes) + 1
         self.notes[note_number] = Note(text, tags)
         return note_number
-
-    def edit_tags(self,tags):
-        self.tags = []
-        self.add_tags(tags)
-
-    def remove_tags(self):
-        self.tags.clear()
 
     def __str__(self):
         if not self.notes:
