@@ -170,9 +170,17 @@ And you're ready to go! 🚀
 
 ## ⌨️ Command suggestions
 
-While entering a command, press `Tab` to display every command that starts
-with the text before the cursor. The closest exact match is shown first, and
-the remaining matches are sorted alphabetically.
+While entering a command or option, press `Tab` to search for values that
+start with the text before the cursor. The result depends on the number of
+matches:
+
+- If there are no matches, the input remains unchanged.
+- If there is one match, the bot completes the current command or option.
+- If there are multiple matches, the bot displays them without changing the
+  input.
+
+The closest exact match is shown first, and the remaining matches are sorted
+alphabetically.
 
 For example, enter `add` and press `Tab`:
 
@@ -182,20 +190,30 @@ Potential commands: add, add_address, add_birthday, add_contact, add_email, add_
 Enter a command >>> add
 ```
 
-The bot only displays suggestions: it does not complete or execute a command.
-Your input and cursor position remain unchanged, so you can continue typing.
+When only one command matches, `Tab` inserts it directly into the prompt:
+
+```text
+Before Tab: Enter a command >>> hell
+After Tab:  Enter a command >>> hello
+```
+
+Autocomplete only changes the current input: it does not execute the command.
 Pressing `Tab` on an empty prompt displays all available commands. Once you
 start entering command arguments, `Tab` does not suggest argument values.
 
 The exception is command options: after entering `-` as the first argument of
 a valid command, press `Tab` to show matching options. Currently, the bot
-supports the `--help` option:
+supports the `--help` option. Because it is currently the only matching
+option, `Tab` completes it directly:
 
 ```text
-Enter a command >>> add --h
-Potential options: --help
-Enter a command >>> add --h
+Before Tab: Enter a command >>> add --h
+After Tab:  Enter a command >>> add --help
 ```
+
+If more options are added later and several of them match the entered prefix,
+the bot will display them as `Potential options` instead of completing the
+input.
 
 If you submit an incomplete command with `Enter`, the bot also displays
 matching commands as a fallback:
