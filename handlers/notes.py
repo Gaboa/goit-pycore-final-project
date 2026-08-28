@@ -1,9 +1,11 @@
-from utils.decorators import input_error_handler
-from utils.helpers import checkForArguments, checkIfRecordExists
 from prompt_toolkit import print_formatted_text
 from prompt_toolkit.formatted_text import FormattedText
 
+from utils.decorators import input_error_handler
+from utils.helpers import checkForArguments, checkIfRecordExists
+
 # Нотатки
+
 
 def print_note(note_number, note):
     tags = ", ".join(note.tags) if note.tags else "No tags"
@@ -18,6 +20,7 @@ def print_note(note_number, note):
     )
 
     print_formatted_text(formatted_note)
+
 
 @input_error_handler
 def add_note(book, *args):
@@ -83,10 +86,14 @@ def edit_note(book, *args):
 
     new_note = input("Enter the new Note:\n").strip()
     record.edit_note(note_number, new_note)
-    edit_tags = input("Would you like to edit tags for this note? (y/n): \n").strip().lower()
+    edit_tags = (
+        input("Would you like to edit tags for this note? (y/n): \n").strip().lower()
+    )
 
     if edit_tags == "y":
-        tags_input = input("Enter new tags for the note (comma-separated, optional): \n").strip()
+        tags_input = input(
+            "Enter new tags for the note (comma-separated, optional): \n"
+        ).strip()
 
         if tags_input:
             tags = [tag.strip() for tag in tags_input.split(",") if tag.strip()]
@@ -95,9 +102,6 @@ def edit_note(book, *args):
         else:
             record.remove_note_tags(note_number)
 
-    print(f"Editing Note {note_number} for contact {name}")
-
-    new_note = input("Enter the new Note:\n").strip()
     record.edit_note(note_number, new_note)
     print(f"Editing Note {note_number} for contact {name}")
 
