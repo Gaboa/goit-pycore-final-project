@@ -1,6 +1,7 @@
-from utils.decorators import input_error_handler
-from utils.helpers import checkForArguments, checkIfRecordExists, checkEmptyPhoneNumber
 from record import Record
+from utils.decorators import input_error_handler
+from utils.helpers import checkEmptyPhoneNumber, checkForArguments, checkIfRecordExists
+
 
 @input_error_handler
 def add_contact(book, *args):
@@ -15,7 +16,7 @@ def add_contact(book, *args):
         record = Record(name)
         book.add_record(record)
         message = f"Contact added: {name}"
-    else: 
+    else:
         message = f"Contact updated: {name}"
 
     if phone:
@@ -23,7 +24,8 @@ def add_contact(book, *args):
         message += f", phone: {phone}"
 
     print(message)
-    
+
+
 @input_error_handler
 def change_contact(book, *args):
     checkForArguments(args, 3, ["name", "old_phone", "new_phone"])
@@ -36,6 +38,7 @@ def change_contact(book, *args):
     record.edit_phone(old_phone, new_phone)
 
     print(f"Changing a contact phone: {name} {old_phone} -> {new_phone}")
+
 
 @input_error_handler
 def search_contact(book, *args):
@@ -52,6 +55,7 @@ def search_contact(book, *args):
     for record in results:
         print(record)
 
+
 @input_error_handler
 def remove_contact(book, *args):
     checkForArguments(args, 1, ["name"])
@@ -63,6 +67,7 @@ def remove_contact(book, *args):
 
     book.remove_record(record)
     print(f"Contact removed: {name}")
+
 
 @input_error_handler
 def show_phone(book, *args):
@@ -77,12 +82,14 @@ def show_phone(book, *args):
     for phone in record.phones:
         print(phone)
 
+
 @input_error_handler
 def show_all_contacts(book):
     print("Showing all contacts:")
     for record in book.data.values():
         print(record)
         print()
+
 
 command_handler_map = {
     "add": add_contact,
@@ -96,5 +103,5 @@ command_handler_map = {
     "phone": show_phone,
     "show_phone": show_phone,
     "all": show_all_contacts,
-    "show_all_contacts": show_all_contacts
+    "show_all_contacts": show_all_contacts,
 }

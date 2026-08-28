@@ -29,6 +29,14 @@ The bot can:
 ```text
 project/
 │
+├── .github/
+│   └── workflows/
+│       └── lint.yml
+│
+├── .vscode/
+│   ├── extensions.json
+│   └── settings.json
+│
 ├── data/
 │   └── addressbook.pkl
 │
@@ -46,8 +54,10 @@ project/
 ├── .gitignore
 ├── address_book.py
 ├── bot.py
+├── pyproject.toml
 ├── record.py
-└── README.md
+├── README.md
+└── requirements-dev.txt
 ```
 
 We separated the handlers and utilities into folders to keep the project easier to navigate and avoid one huge `bot.py` 😅

@@ -1,5 +1,6 @@
-from datetime import datetime as dt
 import re
+from datetime import datetime as dt
+
 
 class Phone:
     def __init__(self, number: str):
@@ -12,8 +13,14 @@ class Phone:
         if number.isdigit() and len(number) == 10:
             return number
         elif not number.isdigit():
-            raise ValueError(f"Phone number cannot contain letters or special characters.")
-        raise ValueError(f"Invalid phone number format, must be 10 digits. You have: {len(number)} digits.")
+            raise ValueError(
+                "Phone number cannot contain letters or special characters."
+            )
+        raise ValueError(
+            "Invalid phone number format, must be 10 digits. You have: "
+            f"{len(number)} digits."
+        )
+
 
 class Birthday:
     def __init__(self, date: str):
@@ -29,6 +36,7 @@ class Birthday:
         except ValueError:
             raise ValueError("Invalid birthday format. Use YYYY-MM-DD.")
 
+
 class Email:
     def __init__(self, email: str):
         self.email = self.validate(email)
@@ -40,7 +48,10 @@ class Email:
         email_pattern = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
         if re.match(email_pattern, email):
             return email
-        raise ValueError("Invalid email format. Use a valid email address (e.g., user@example.com).")
+        raise ValueError(
+            "Invalid email format. Use a valid email address (e.g., user@example.com)."
+        )
+
 
 class Address:
     def __init__(self, address: str):
@@ -55,8 +66,9 @@ class Address:
             return address
         raise ValueError("Address cannot be empty.")
 
+
 class Note:
-    def __init__(self, text: str, tags = None):
+    def __init__(self, text: str, tags=None):
         self.text = text.strip()
         self.tags = []
 
@@ -73,6 +85,7 @@ class Note:
         tags = ", ".join(self.tags) if self.tags else "No tags"
         return f"{self.text} | Tags: {tags}"
 
+
 class Notes:
     def __init__(self, notes: dict):
         self.notes: dict[int, Note] = notes if notes is not None else {}
@@ -84,16 +97,16 @@ class Notes:
 
     def __str__(self):
         if not self.notes:
-            return 'No notes available.'
-        return "\n".join(f"{n}: {note}" for n, note in self.notes.items()) 
+            return "No notes available."
+        return "\n".join(f"{n}: {note}" for n, note in self.notes.items())
 
     def short(self):
         if not self.notes:
-            return 'N/A'
+            return "N/A"
         notes_list = list(self.notes.values())
         if len(notes_list) == 1:
             return str(notes_list[0])
-        return f'{notes_list[0]} and {len(notes_list) - 1} more'
+        return f"{notes_list[0]} and {len(notes_list) - 1} more"
 
     def delete(self, note_number):
         if note_number not in self.notes:
@@ -107,13 +120,17 @@ class Notes:
         self.notes = renumber
 
     def search(self, keys):
-        keys = re.sub(r'[^\w\s]', '', keys).lower()
-        return {n: note for n, note in self.notes.items() 
-                if keys in re.sub(r'[^\w\s]', '', note.text).lower()}
+        keys = re.sub(r"[^\w\s]", "", keys).lower()
+        return {
+            n: note
+            for n, note in self.notes.items()
+            if keys in re.sub(r"[^\w\s]", "", note.text).lower()
+        }
 
     def search_by_tag(self, tag):
         tag = tag.strip().lower()
         return {number: note for number, note in self.notes.items() if tag in note.tags}
+
 
 class Record:
     def __init__(self, name: str):
@@ -126,13 +143,13 @@ class Record:
 
     def __str__(self):
         return (
-            f"Contact name: {self.name}\n" 
-            f"Phones: {'; '.join(p.number for p in self.phones)}\n" 
-            f"Birthday: {self.birthday.date if self.birthday else 'N/A'}\n" 
-            f"Email: {self.email.email if self.email else 'N/A'}\n" 
+            f"Contact name: {self.name}\n"
+            f"Phones: {'; '.join(p.number for p in self.phones)}\n"
+            f"Birthday: {self.birthday.date if self.birthday else 'N/A'}\n"
+            f"Email: {self.email.email if self.email else 'N/A'}\n"
             f"Address: {self.address.address if self.address else 'N/A'}\n"
             f"Notes: {self.notes.short() if self.notes else 'N/A'}"
-            )
+        )
 
     # Phone methods
     def add_phone(self, phone: str):
@@ -201,6 +218,7 @@ class Record:
             self.address = Address(new_address)
         else:
             raise ValueError("No address to edit. Please add an address first.")
+
     def get_address(self):
         if self.address is not None:
             return self.address.address

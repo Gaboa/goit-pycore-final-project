@@ -1,5 +1,7 @@
 from datetime import datetime as dt
+
 from record import Record
+
 
 class AddressBook:
     def __init__(self):
@@ -34,19 +36,23 @@ class AddressBook:
         for user in self.data.values():
             if user.get_birthday() != "N/A":
                 birthday = dt.strptime(user.get_birthday(), "%Y-%m-%d")
-                nearest_birthday = birthday.replace(year=today.year, hour=23, minute=59, second=59)
+                nearest_birthday = birthday.replace(
+                    year=today.year, hour=23, minute=59, second=59
+                )
                 if nearest_birthday < today:
                     nearest_birthday = nearest_birthday.replace(year=today.year + 1)
 
                 delta_days = nearest_birthday - today
-        
+
                 if delta_days.days < delta:
                     congratulation_date = nearest_birthday.strftime("%Y-%m-%d")
 
-                    result.append({
-                        "name": user.name,
-                        "congratulation_date": congratulation_date,
-                    })
+                    result.append(
+                        {
+                            "name": user.name,
+                            "congratulation_date": congratulation_date,
+                        }
+                    )
 
         return result
 
@@ -55,4 +61,3 @@ class AddressBook:
             del self.data[record.name]
         else:
             raise ValueError("Record not found")
-
