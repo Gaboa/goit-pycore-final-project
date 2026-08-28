@@ -10,7 +10,7 @@ from handlers.contact import command_handler_map as contact_command_handler_map
 from handlers.email import command_handler_map as email_command_handler_map
 from handlers.notes import command_handler_map as notes_command_handler_map
 from hints_collection import HELP_FLAG, help_hints
-from utils.options import get_help_hint
+from utils.options import get_all_help_hints, get_help_hint
 
 command_handler_map = {}
 command_handler_map.update(address_command_handler_map)
@@ -20,7 +20,7 @@ command_handler_map.update(email_command_handler_map)
 command_handler_map.update(notes_command_handler_map)
 
 valid_commands = list(command_handler_map.keys())
-valid_commands.extend(["hello", "close", "exit"])
+valid_commands.extend(["hello", "close", "exit", "help"])
 valid_options = [HELP_FLAG]
 
 
@@ -75,6 +75,8 @@ def main():
         try:
             if command in command_handler_map:
                 command_handler_map[command](book, *args)
+            elif command == "help":
+                print(get_all_help_hints(help_hints))
             elif command == "hello":
                 print("How can I help you?")
             elif command in ["close", "exit"]:

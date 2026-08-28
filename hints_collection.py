@@ -2,27 +2,33 @@ HELP_FLAG = "--help"
 
 
 ADD_CONTACT_HELP = """Add a new contact or add a phone to an existing contact.
+Aliases: add, add_contact
 Usage: add <name> <phone>
 Example: add John 0123456789
 The phone number must contain exactly 10 digits."""
 
 CHANGE_CONTACT_HELP = """Change an existing phone number for a contact.
+Aliases: change, change_contact
 Usage: change <name> <old_phone> <new_phone>
 Example: change John 0123456789 0987654321"""
 
 SEARCH_CONTACT_HELP = """Search for contacts by name.
+Aliases: search, search_contact
 Usage: search <query>
 Example: search John"""
 
 REMOVE_CONTACT_HELP = """Remove a contact from the address book.
+Aliases: remove, remove_contact
 Usage: remove <name>
 Example: remove John"""
 
 SHOW_PHONE_HELP = """Show all phone numbers saved for a contact.
+Aliases: phone, show_phone
 Usage: phone <name>
 Example: phone John"""
 
 SHOW_ALL_CONTACTS_HELP = """Show all contacts in the address book.
+Aliases: all, show_all_contacts
 Usage: all"""
 
 ADD_ADDRESS_HELP = """Add an address to an existing contact.
@@ -66,6 +72,7 @@ Usage: show_birthday <name>
 Example: show_birthday John"""
 
 UPCOMING_BIRTHDAYS_HELP = """Show birthdays occurring within a number of days.
+Aliases: birthdays, upcoming_birthdays
 Usage: birthdays [days]
 Example: birthdays 30
 If days is omitted, the bot uses 7 days."""
@@ -76,6 +83,7 @@ Example: add_note John
 The bot will ask for the note text and optional tags."""
 
 SHOW_NOTES_HELP = """Show all notes saved for a contact.
+Aliases: notes, show_notes
 Usage: notes <name>
 Example: notes John"""
 
@@ -104,7 +112,11 @@ HELLO_HELP = """Display the bot's greeting.
 Usage: hello"""
 
 EXIT_HELP = """Save the address book and close the bot.
+Aliases: close, exit
 Usage: exit"""
+
+COMMAND_HELP = """Display help for all available commands.
+Usage: help"""
 
 
 help_hints = {
@@ -143,4 +155,5 @@ help_hints = {
     "hello": HELLO_HELP,
     "close": EXIT_HELP,
     "exit": EXIT_HELP,
+    "help": COMMAND_HELP,
 }
