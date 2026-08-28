@@ -1,0 +1,14 @@
+[tool.ruff]
+target-version = "py39"
+line-length = 88
+extend-exclude = ["data"]
+
+[tool.ruff.lint]
+# `E` and `W` are pycodestyle checks, `F` catches common Python errors,
+# and `I` enforces consistent import sorting.
+select = ["E", "W", "F", "I"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"

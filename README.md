@@ -56,7 +56,77 @@ We separated the handlers and utilities into folders to keep the project easier 
 
 ## 🚀 How to Run
 
-Clone the repository and open the project folder.
+### First-time setup
+
+Prerequisite: Python 3.9 or newer must be installed on your computer.
+
+Use a separate virtual environment for this project. It keeps its tools and
+dependencies isolated from other Python projects on your computer.
+
+1. Clone the repository and open the project folder.
+
+2. Create the virtual environment (only once per clone):
+
+   macOS / Linux:
+
+   ```bash
+   python -m venv .venv
+   ```
+
+   Windows:
+
+   ```powershell
+   py -m venv .venv
+   ```
+
+3. Activate it before working on the project:
+
+   macOS / Linux:
+
+   ```bash
+   source .venv/bin/activate
+   ```
+
+   Windows PowerShell:
+
+   ```powershell
+   .venv\Scripts\Activate.ps1
+   ```
+
+   Windows Command Prompt:
+
+   ```bat
+   .venv\Scripts\activate.bat
+   ```
+
+   Your terminal prompt should now start with `(.venv)`.
+
+   If PowerShell blocks the activation script, run the following command for
+   the current terminal, then activate the environment again:
+
+   ```powershell
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+   ```
+
+4. If you will change the code, install the development tools, including Ruff:
+
+   ```bash
+   python -m pip install -r requirements-dev.txt
+   ```
+
+   In VS Code, select the virtual-environment interpreter through **Python:
+   Select Interpreter**: `.venv/bin/python` on macOS/Linux or
+   `.venv\Scripts\python.exe` on Windows.
+
+5. If you use VS Code, install the official **Ruff** extension
+   (`charliermarsh.ruff`). VS Code will also recommend it automatically when
+   you open this project. The workspace settings format Python files, apply
+   safe Ruff fixes, and organize imports when you save.
+
+The `.venv/` folder is intentionally ignored by Git. Every developer creates
+their own local environment; do not commit it.
+
+### Start the bot
 
 Then run:
 
@@ -72,6 +142,32 @@ Enter a command >>>
 ```
 
 And you're ready to go! 🚀
+
+---
+
+## 🧹 Code style and linting
+
+The project uses [Ruff](https://docs.astral.sh/ruff/) to check PEP 8 style
+rules, import order, and common Python errors. GitHub Actions runs the same
+lint check and verifies formatting for every push and pull request.
+
+After activating `.venv`, install the development tools once:
+
+```bash
+python -m pip install -r requirements-dev.txt
+```
+
+Check the project locally:
+
+```bash
+python -m ruff check .
+```
+
+To apply safe automatic fixes, use:
+
+```bash
+python -m ruff check . --fix
+```
 
 ---
 
