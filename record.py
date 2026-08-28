@@ -11,6 +11,8 @@ class Phone:
     def validate(self, number: str):
         if number.isdigit() and len(number) == 10:
             return number
+        elif not number.isdigit():
+            raise ValueError(f"Phone number cannot contain letters or special characters.")
         raise ValueError(f"Invalid phone number format, must be 10 digits. You have: {len(number)} digits.")
 
 class Birthday:
