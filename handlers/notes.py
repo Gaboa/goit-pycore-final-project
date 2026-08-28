@@ -87,14 +87,12 @@ def edit_note(book, *args):
     new_note = input("Enter the new Note:\n").strip()
     record.edit_note(note_number, new_note)
     edit_tags = (
-        input("Would you like to edit tags for this note? (y/n): \n")
-        .strip()
-        .lower()
-)
+        input("Would you like to edit tags for this note? (y/n): \n").strip().lower()
+    )
     if edit_tags == "y":
         tags_input = input(
             "Enter new tags for the note (comma-separated, optional): \n"
-            ).strip()
+        ).strip()
 
         if tags_input:
             tags = [tag.strip() for tag in tags_input.split(",") if tag.strip()]
