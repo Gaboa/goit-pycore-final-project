@@ -54,25 +54,25 @@ def main():
 
     print("Welcome to the assistant bot!")
     while True:
-        command_input = session.prompt("Enter a command >>> ").strip()
-        command, *args = parse_input(command_input)
-
-        if command not in valid_commands:
-            potential_commands = find_command(command, valid_commands)
-
-            if potential_commands:
-                print(f"Possible commands: {', '.join(potential_commands)}")
-            else:
-                print("Invalid command. Please try again.")
-
-            continue
-
-        if args == [HELP_FLAG]:
-            print(get_help_hint(command, help_hints))
-
-            continue
-
         try:
+            command_input = session.prompt("Enter a command >>> ").strip()
+            command, *args = parse_input(command_input)
+
+            if command not in valid_commands:
+                potential_commands = find_command(command, valid_commands)
+
+                if potential_commands:
+                    print(f"Possible commands: {', '.join(potential_commands)}")
+                else:
+                    print("Invalid command. Please try again.")
+
+                continue
+
+            if args == [HELP_FLAG]:
+                print(get_help_hint(command, help_hints))
+
+                continue
+
             if command in command_handler_map:
                 command_handler_map[command](book, *args)
             elif command == "help":
@@ -83,6 +83,11 @@ def main():
                 print("Good bye!")
                 save_data(book, "data/addressbook.pkl")
                 break
+        except KeyboardInterrupt:
+            print("\nInterrupted. Saving data before exit...")
+            save_data(book, "data/addressbook.pkl")
+            print("Good bye!")
+            break
         except ValueError as e:
             print(e)
 
