@@ -29,7 +29,7 @@ class AddressBook:
                 result.append(f"{record.name}: {record.get_birthday()}")
         return result
 
-    def get_upcoming_birthdays(self, delta) -> list[Record]:
+    def get_upcoming_birthdays(self, delta) -> list[dict]:
         result = []
         today = dt.today()
 

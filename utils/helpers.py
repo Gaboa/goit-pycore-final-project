@@ -14,4 +14,3 @@ def check_for_arguments(args, length: int, names: list[str]):
 def check_empty_phone_number(args):
     if len(args) == 1:
         raise ValueError("Phone number cannot be empty.")
-    pass
