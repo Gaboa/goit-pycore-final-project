@@ -1,15 +1,15 @@
 from utils.decorators import input_error_handler
-from utils.helpers import checkForArguments, checkIfRecordExists
+from utils.helpers import check_for_arguments, check_if_record_exists
 
 
 @input_error_handler
 def add_birthday(book, *args):
-    checkForArguments(args, 2, ["name", "birthday"])
+    check_for_arguments(args, 2, ["name", "birthday"])
 
     name, birthday, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     record.add_birthday(birthday)
 
@@ -18,12 +18,12 @@ def add_birthday(book, *args):
 
 @input_error_handler
 def show_birthday(book, *args):
-    checkForArguments(args, 1, ["name"])
+    check_for_arguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     birthday = record.get_birthday()
     print(f"Birthday for {name}: {birthday}")

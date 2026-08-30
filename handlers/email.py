@@ -1,15 +1,15 @@
 from utils.decorators import input_error_handler
-from utils.helpers import checkForArguments, checkIfRecordExists
+from utils.helpers import check_for_arguments, check_if_record_exists
 
 
 @input_error_handler
 def add_email(book, *args):
-    checkForArguments(args, 2, ["name", "email"])
+    check_for_arguments(args, 2, ["name", "email"])
 
     name, email, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     record.add_email(email)
 
@@ -18,12 +18,12 @@ def add_email(book, *args):
 
 @input_error_handler
 def edit_email(book, *args):
-    checkForArguments(args, 2, ["name", "new_email"])
+    check_for_arguments(args, 2, ["name", "new_email"])
 
     name, new_email, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     old_email = record.get_email()
     record.edit_email(new_email)
@@ -33,12 +33,12 @@ def edit_email(book, *args):
 
 @input_error_handler
 def get_email(book, *args):
-    checkForArguments(args, 1, ["name"])
+    check_for_arguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     email = record.get_email()
     print(f"Email for {name}: {email}")
@@ -46,12 +46,12 @@ def get_email(book, *args):
 
 @input_error_handler
 def remove_email(book, *args):
-    checkForArguments(args, 1, ["name"])
+    check_for_arguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     record.remove_email()
     print(f"Email removed for {name}.")
