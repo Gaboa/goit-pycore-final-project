@@ -3,5 +3,4 @@ __pycache__
 .ruff_cache/
 *.pkl
 .idea/
-.vscode/
 .DS_Store
