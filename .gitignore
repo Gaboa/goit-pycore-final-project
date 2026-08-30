@@ -1,3 +1,7 @@
 __pycache__
 .venv/
 .ruff_cache/
+*.pkl
+.idea/
+.vscode/
+.DS_Store
