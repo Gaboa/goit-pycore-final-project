@@ -1,4 +1,5 @@
 import pickle
+from pathlib import Path
 
 from prompt_toolkit import PromptSession
 
@@ -23,6 +24,8 @@ valid_commands = list(command_handler_map.keys())
 valid_commands.extend(["hello", "close", "exit", "help"])
 valid_options = [HELP_FLAG]
 
+DATA_FILE = Path.home() / "assistant-bot" / "addressbook.pkl"
+
 
 def parse_input(user_input):
     if not user_input:
@@ -33,6 +36,7 @@ def parse_input(user_input):
 
 
 def save_data(book, filename):
+    filename.parent.mkdir(parents=True, exist_ok=True)
     with open(filename, "wb") as f:
         pickle.dump(book, f)
 
@@ -46,33 +50,32 @@ def load_data(filename, book_class):
 
 
 def main():
-
-    book = load_data("data/addressbook.pkl", AddressBook)
+    book = load_data(DATA_FILE, AddressBook)
 
     bindings = create_autocomplete_bindings(valid_commands, valid_options)
     session = PromptSession(key_bindings=bindings)
 
     print("Welcome to the assistant bot!")
     while True:
-        command_input = session.prompt("Enter a command >>> ").strip()
-        command, *args = parse_input(command_input)
-
-        if command not in valid_commands:
-            potential_commands = find_command(command, valid_commands)
-
-            if potential_commands:
-                print(f"Possible commands: {', '.join(potential_commands)}")
-            else:
-                print("Invalid command. Please try again.")
-
-            continue
-
-        if args == [HELP_FLAG]:
-            print(get_help_hint(command, help_hints))
-
-            continue
-
         try:
+            command_input = session.prompt("Enter a command >>> ").strip()
+            command, *args = parse_input(command_input)
+
+            if command not in valid_commands:
+                potential_commands = find_command(command, valid_commands)
+
+                if potential_commands:
+                    print(f"Possible commands: {', '.join(potential_commands)}")
+                else:
+                    print("Invalid command. Please try again.")
+
+                continue
+
+            if args == [HELP_FLAG]:
+                print(get_help_hint(command, help_hints))
+
+                continue
+
             if command in command_handler_map:
                 command_handler_map[command](book, *args)
             elif command == "help":
@@ -81,8 +84,13 @@ def main():
                 print("How can I help you?")
             elif command in ["close", "exit"]:
                 print("Good bye!")
-                save_data(book, "data/addressbook.pkl")
+                save_data(book, DATA_FILE)
                 break
+        except KeyboardInterrupt:
+            print("\nInterrupted. Saving data before exit...")
+            save_data(book, DATA_FILE)
+            print("Good bye!")
+            break
         except ValueError as e:
             print(e)
 

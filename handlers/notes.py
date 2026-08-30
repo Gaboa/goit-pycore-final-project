@@ -2,7 +2,7 @@ from prompt_toolkit import print_formatted_text
 from prompt_toolkit.formatted_text import FormattedText
 
 from utils.decorators import input_error_handler
-from utils.helpers import checkForArguments, checkIfRecordExists
+from utils.helpers import check_for_arguments, check_if_record_exists
 
 # Нотатки
 
@@ -24,12 +24,12 @@ def print_note(note_number, note):
 
 @input_error_handler
 def add_note(book, *args):
-    checkForArguments(args, 1, ["name"])
+    check_for_arguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     note = input("Enter the Note:\n").strip()
 
@@ -46,12 +46,12 @@ def add_note(book, *args):
 
 @input_error_handler
 def show_notes(book, *args):
-    checkForArguments(args, 1, ["name"])
+    check_for_arguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     if not record.notes.notes:
         print(f"No notes found for contact {name}.")
@@ -64,11 +64,11 @@ def show_notes(book, *args):
 
 @input_error_handler
 def edit_note(book, *args):
-    checkForArguments(args, 1, ["name"])
+    check_for_arguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     if not record.notes.notes:
         print(f"No notes found for contact {name}.")
@@ -107,7 +107,7 @@ def edit_note(book, *args):
 
 @input_error_handler
 def search_notes_by_tag(book, *args):
-    checkForArguments(args, 1, ["tag"])
+    check_for_arguments(args, 1, ["tag"])
 
     tag = args[0]
     result = False
@@ -148,11 +148,11 @@ def sort_notes_by_tags(book, *args):
 
 @input_error_handler
 def remove_note(book, *args):
-    checkForArguments(args, 1, ["name"])
+    check_for_arguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     if not record.notes.notes:
         print(f"No notes found for contact {name}.")
@@ -185,7 +185,7 @@ def remove_note(book, *args):
 
 @input_error_handler
 def search_notes(book, *args):
-    checkForArguments(args, 1, ["keys"])
+    check_for_arguments(args, 1, ["keys"])
     keys = " ".join(args)
 
     result = False

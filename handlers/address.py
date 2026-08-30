@@ -1,16 +1,16 @@
 from utils.decorators import input_error_handler
-from utils.helpers import checkForArguments, checkIfRecordExists
+from utils.helpers import check_for_arguments, check_if_record_exists
 
 
 @input_error_handler
 def add_address(book, *args):
-    checkForArguments(args, 2, ["name", "address"])
+    check_for_arguments(args, 2, ["name", "address"])
 
     name, *_ = args
     address = " ".join(args[1:])
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     record.add_address(address)
     print(f"Adding an address: {name} {address}")
@@ -18,13 +18,13 @@ def add_address(book, *args):
 
 @input_error_handler
 def edit_address(book, *args):
-    checkForArguments(args, 2, ["name", "new_address"])
+    check_for_arguments(args, 2, ["name", "new_address"])
 
     name, *_ = args
     new_address = " ".join(args[1:])
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     old_address = record.get_address()
     record.edit_address(new_address)
@@ -33,12 +33,12 @@ def edit_address(book, *args):
 
 @input_error_handler
 def get_address(book, *args):
-    checkForArguments(args, 1, ["name"])
+    check_for_arguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     address = record.get_address()
     print(f"Address for {name}: {address}")
@@ -46,12 +46,12 @@ def get_address(book, *args):
 
 @input_error_handler
 def remove_address(book, *args):
-    checkForArguments(args, 1, ["name"])
+    check_for_arguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     record.remove_address()
     print(f"Address removed for {name}.")

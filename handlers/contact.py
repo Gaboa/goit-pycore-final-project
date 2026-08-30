@@ -1,12 +1,16 @@
 from record import Record
 from utils.decorators import input_error_handler
-from utils.helpers import checkEmptyPhoneNumber, checkForArguments, checkIfRecordExists
+from utils.helpers import (
+    check_empty_phone_number,
+    check_for_arguments,
+    check_if_record_exists,
+)
 
 
 @input_error_handler
 def add_contact(book, *args):
-    checkEmptyPhoneNumber(args)
-    checkForArguments(args, 2, ["name", "phone"])
+    check_empty_phone_number(args)
+    check_for_arguments(args, 2, ["name", "phone"])
 
     name, phone, *_ = args
     record = book.find(name)
@@ -28,12 +32,12 @@ def add_contact(book, *args):
 
 @input_error_handler
 def change_contact(book, *args):
-    checkForArguments(args, 3, ["name", "old_phone", "new_phone"])
+    check_for_arguments(args, 3, ["name", "old_phone", "new_phone"])
 
     name, old_phone, new_phone, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     record.edit_phone(old_phone, new_phone)
 
@@ -42,7 +46,7 @@ def change_contact(book, *args):
 
 @input_error_handler
 def search_contact(book, *args):
-    checkForArguments(args, 1, ["query"])
+    check_for_arguments(args, 1, ["query"])
 
     query = args[0]
     results = book.search(query)
@@ -58,12 +62,12 @@ def search_contact(book, *args):
 
 @input_error_handler
 def remove_contact(book, *args):
-    checkForArguments(args, 1, ["name"])
+    check_for_arguments(args, 1, ["name"])
 
     name = args[0]
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     book.remove_record(record)
     print(f"Contact removed: {name}")
@@ -71,12 +75,12 @@ def remove_contact(book, *args):
 
 @input_error_handler
 def show_phone(book, *args):
-    checkForArguments(args, 1, ["name"])
+    check_for_arguments(args, 1, ["name"])
 
     name, *_ = args
     record = book.find(name)
 
-    checkIfRecordExists(record, name)
+    check_if_record_exists(record, name)
 
     print(f"Phone numbers for {name}:")
     for phone in record.phones:

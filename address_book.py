@@ -29,18 +29,25 @@ class AddressBook:
                 result.append(f"{record.name}: {record.get_birthday()}")
         return result
 
-    def get_upcoming_birthdays(self, delta) -> list[Record]:
+    def get_upcoming_birthdays(self, delta) -> list[dict]:
         result = []
         today = dt.today()
+
+        # For 29th February birthdays, adjust to 28th February in non-leap years
+        def get_birthday_for_year(birthday_dt: dt, year: int) -> dt:
+            try:
+                return birthday_dt.replace(year=year, hour=23, minute=59, second=59)
+            except ValueError:
+                return birthday_dt.replace(
+                    year=year, month=2, day=28, hour=23, minute=59, second=59
+                )
 
         for user in self.data.values():
             if user.get_birthday() != "N/A":
                 birthday = dt.strptime(user.get_birthday(), "%Y-%m-%d")
-                nearest_birthday = birthday.replace(
-                    year=today.year, hour=23, minute=59, second=59
-                )
+                nearest_birthday = get_birthday_for_year(birthday, today.year)
                 if nearest_birthday < today:
-                    nearest_birthday = nearest_birthday.replace(year=today.year + 1)
+                    nearest_birthday = get_birthday_for_year(birthday, today.year + 1)
 
                 delta_days = nearest_birthday - today
 
